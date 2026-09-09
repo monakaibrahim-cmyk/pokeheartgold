@@ -65,9 +65,6 @@ void sub_02072190(BoxPokemon *boxMon, PlayerProfile *a1, u32 pokeball, u32 a3, u
 #define DECRYPT_PTY(mon)       MonDecryptSegment(ENCRY_ARGS_PTY(mon))
 #define DECRYPT_BOX(boxMon)    MonDecryptSegment(ENCRY_ARGS_BOX(boxMon))
 #define CHECKSUM(boxMon)       CalcMonChecksum((u16 *)(boxMon)->dataBlocks, sizeof((boxMon)->dataBlocks))
-#define SHINY_CHECK(otid, pid) ((                                                                                                              \
-                                    (((otid) & 0xFFFF0000u) >> 16u) ^ ((otid) & 0xFFFFu) ^ (((pid) & 0xFFFF0000u) >> 16u) ^ ((pid) & 0xFFFFu)) \
-    < 8u)
 #define CALC_UNOWN_LETTER(pid) ((u32)((((pid) & 0x3000000) >> 18) | (((pid) & 0x30000) >> 12) | (((pid) & 0x300) >> 6) | (((pid) & 0x3) >> 0)) % 28u)
 
 static const s8 sFlavorPreferencesByNature[NATURE_NUM][FLAVOR_MAX] = {
@@ -198,7 +195,6 @@ void CreateBoxMon(BoxPokemon *boxMon, int species, int level, int fixedIV, int h
     if (otIdType == 2) {
         do {
             fixedOtId = (LCRandom() | (LCRandom() << 16));
-        // } while (SHINY_CHECK(fixedOtId, fixedPersonality));
         } while (Pokemon_InlineIsPersonalityShiny(fixedOtId, fixedPersonality));
     } else if (otIdType != 1) {
         fixedOtId = 0;
@@ -2127,7 +2123,6 @@ u8 BoxMonIsShiny(BoxPokemon *boxMon) {
 }
 
 u8 CalcShininessByOtIdAndPersonality(u32 otid, u32 pid) {
-    // return (u8)SHINY_CHECK(otid, pid);
     return Pokemon_InlineIsPersonalityShiny(otid, pid);
 }
 
