@@ -198,7 +198,8 @@ void CreateBoxMon(BoxPokemon *boxMon, int species, int level, int fixedIV, int h
     if (otIdType == 2) {
         do {
             fixedOtId = (LCRandom() | (LCRandom() << 16));
-        } while (SHINY_CHECK(fixedOtId, fixedPersonality));
+        // } while (SHINY_CHECK(fixedOtId, fixedPersonality));
+        } while (Pokemon_InlineIsPersonalityShiny(fixedOtId, fixedPersonality));
     } else if (otIdType != 1) {
         fixedOtId = 0;
     }
@@ -2126,7 +2127,12 @@ u8 BoxMonIsShiny(BoxPokemon *boxMon) {
 }
 
 u8 CalcShininessByOtIdAndPersonality(u32 otid, u32 pid) {
-    return (u8)SHINY_CHECK(otid, pid);
+    // return (u8)SHINY_CHECK(otid, pid);
+    return Pokemon_InlineIsPersonalityShiny(otid, pid);
+}
+
+BOOL Pokemon_InlineIsPersonalityShiny(u32 otid, u32 pid) {
+    return (((otid & 0xFFFF0000u) >> 16u) ^ (otid & 0xFFFFu) ^ ((pid & 0xFFFF0000u) >> 16u) ^ (pid & 0xFFFFu)) < 8u;
 }
 
 u32 GenerateShinyPersonality(u32 otid) {

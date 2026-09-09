@@ -81,6 +81,7 @@ u8 GetGenderBySpeciesAndPersonality(u16 species, u32 pid);
 u8 MonIsShiny(Pokemon *mon);
 u8 BoxMonIsShiny(BoxPokemon *boxMon);
 u8 CalcShininessByOtIdAndPersonality(u32 otid, u32 pid);
+BOOL Pokemon_InlineIsPersonalityShiny(u32 otid, u32 pid);
 u32 GenerateShinyPersonality(u32 otid);
 u32 GetArceusTypeByHeldItemEffect(u16 plate);
 u8 GetBoxMonUnownLetter(BoxPokemon *boxMon);
